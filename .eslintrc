@@ -1,0 +1,18 @@
+{
+  "parser": "babel-eslint",
+	"extends": "airbnb",
+  "rules": {
+    "yoda": ["error", "never", { "exceptRange": true }]
+  },
+  "plugins": [
+    "react",
+    "jsx-aliy",
+    "import"
+  ],
+  "globals": {
+    "styles": true,
+    "Back": true,
+    "Power3": true,
+    "Power1": true
+  }
+}
