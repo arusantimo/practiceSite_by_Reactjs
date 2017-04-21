@@ -5,19 +5,18 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 module.exports = _.assign({}, baseConfig,{
+  entry: [
+    './src/client.js',
+  ],
   output: {
     path: __dirname + '/public',
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   plugins: _.concat(baseConfig.plugins, [
     new webpack.LoaderOptionsPlugin({
       minimize: true,
     }),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       compress: {
@@ -39,32 +38,16 @@ module.exports = _.assign({}, baseConfig,{
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,
-          presets: [
-            'es2015',
-            'react',
-            'stage-0'
-            [
-              "env",
-                {
-                  browsers: ['last 2 versions', '> 10%', 'ie 9'],
-                  // tree shaking
-                  "modules": false
-                }
-            ]
-          ],
-          plugins: [
-            'transform-decorators-legacy',
-            'transform-class-properties'
-          ]
         }
       },
       {
         test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+        exclude: /node_modules/,
         loader: 'url-loader',
         options: {
           name: 'assets/[hash].[ext]',
@@ -77,9 +60,9 @@ module.exports = _.assign({}, baseConfig,{
         loader: ExtractTextPlugin.extract('css-loader'),
       },
       {
-        test: /\.less$/,
+        test: /\.scss$/,
         exclude: /node_modules/,
-        loader: ExtractTextPlugin.extract('css-loader!postcss-loader!less-loader'),
+        loader: ExtractTextPlugin.extract('style-loader!postcss-loader!sass-loader'),
       }
     ]
   }

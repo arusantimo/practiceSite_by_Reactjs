@@ -8,14 +8,15 @@ process.noDeprecation = true;
 
 module.exports = _.assign({}, baseConfig, {
   devtool: '#source-map',
-  entry: _.concat([
+  entry: [
+    path.join(__dirname, 'src', 'client.js'),
     `react-hot-loader/patch`, // activate HMR for React
     `webpack-dev-server/client?http://0.0.0.0:${process.env.DEV_PORT}`, // WebpackDevServer host and port
     `webpack/hot/only-dev-server`, // "only" prevents reload on syntax errors
-  ], baseConfig.entry),
+  ],
   output: {
     path: '/',
-    filename: 'bundle.js'
+    filename: 'client.js'
   },
   devServer: {
     hot: true,
@@ -37,15 +38,12 @@ module.exports = _.assign({}, baseConfig, {
   module: {
     rules: [
       {
-        test: /.js$/,
+        test: /\.(js|jsx)$/,
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,
-          presets: ['es2015', 'react', 'stage-0'],
           plugins: [
             'react-hot-loader/babel',
-            'transform-decorators-legacy',
-            'transform-class-properties'
           ]
         },
         exclude: /node_modules/,
@@ -57,6 +55,7 @@ module.exports = _.assign({}, baseConfig, {
           name: 'assets/[hash].[ext]',
           limit: 10000
         },
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
@@ -64,9 +63,9 @@ module.exports = _.assign({}, baseConfig, {
         exclude: /node_modules/
       },
       {
-        test: /\.less$/,
-        loader: ExtractTextPlugin.extract('css-loader?sourceMap!postcss-loader?sourceMap!less-loader?sourceMap'),
-        exclude: /node_modules/
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        loader: ExtractTextPlugin.extract('sass-loader?sourceMap'),
       }
     ]
   }
