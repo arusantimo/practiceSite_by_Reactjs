@@ -1,31 +1,49 @@
-const _ = require('lodash');
-const webpack = require('webpack');
-const baseConfig = require('./webpack.config');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const webpack = require("webpack");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
-module.exports = _.assign({}, baseConfig,{
+module.exports = {
   entry: [
-    './src/client.js',
+    'babel-polyfill',
+    './src/client.jsx'
   ],
   output: {
     path: __dirname + '/public',
-    filename: '[name].js'
+    filename: 'bundle.js'
   },
-  plugins: _.concat(baseConfig.plugins, [
+  resolve: {
+		extensions: ['.ts', '.tsx', '.js', 'json', '.jsx', 'css', 'scss']
+	},
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      options: {
+        resolve: {
+          extensions: ['.ts', '.tsx', '.js', 'json', '.jsx', 'css', 'scss']
+        }
+      }
+    }),
+    new ExtractTextPlugin({
+      filename: 'www.min.css',
+      allChunks: false
+    }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
     }),
-    new webpack.EnvironmentPlugin(['NODE_ENV']),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production')
+      }
+    }),
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       compress: {
         warnings: false,
-        unused: true,
+        unused: true
       },
       output: {
-        comments: false,
-      },
+        comments: false
+      }
     }),
     new OptimizeCssAssetsPlugin({
       cssProcessorOptions: {
@@ -34,13 +52,22 @@ module.exports = _.assign({}, baseConfig,{
         }
       }
     })
-  ]),
+  ],
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
+        loader: 'babel-loader!awesome-typescript-loader?module=es6',
+        options: {
+          cacheDirectory: true,
+        }
+      },
+      {
+        enforce: "pre",
+        test: /\.(js|jsx)$/,
         loader: 'babel-loader',
+        exclude: /node_modules/,
         options: {
           cacheDirectory: true,
         }
@@ -66,4 +93,4 @@ module.exports = _.assign({}, baseConfig,{
       }
     ]
   }
-});
+};

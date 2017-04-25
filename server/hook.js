@@ -1,6 +1,6 @@
 const assetHook = require('asset-require-hook');
 const cssHook = require('css-modules-require-hook');
-const lessParser = require('postcss-less').parse;
+const sassParser = require('postcss-scss').parse;
 
 assetHook({
   extensions: ['ico', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'ttf', 'eot', 'woff', 'woff2'],
@@ -9,8 +9,8 @@ assetHook({
 });
 
 cssHook({
-  extensions: '.less',
+  extensions: '.scss',
   processorOpts: {
-    parser: lessParser
+    parser: sassParser
   }
 });

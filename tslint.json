@@ -1,0 +1,36 @@
+{
+  "experimentalDecorators": true,
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "module": "commonjs",
+    "target": "es6",
+    "jsx": "react"
+},
+  "filesGlob": [
+    "src/*.ts",
+    "src/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "custom_typings/**/*.d.ts",
+    "typings/**/*.d.ts",
+    "node_modules/@types/**/*.d.ts",
+    "node_modules/rxjs/*.d.ts",
+    "node_modules/rxjs/**/*.d.ts",
+    "!./node_modules/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "!node_modules/@types",
+    "src_ts_processed",
+    "public",
+    "server",
+    "webpack.*.js"
+  ],
+  "atom": {
+    "rewriteTsconfig": false
+  }
+}
